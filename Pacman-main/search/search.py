@@ -104,33 +104,34 @@ def depthFirstSearch(problem):
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    #util.raiseNotDefined()
-    """ Search the shallowest nodes in the search tree first. """
-    currPath = []           # The path that is popped from the frontier in each loop
-    currState =  problem.getStartState()    # The state(position) that is popped for the frontier in each loop
-    print(f"currState: {currState}")
-    if problem.isGoalState(currState):     # Checking if the start state is also a goal state
-        return currPath
+    queue = Queue()
+    visited = set()
+    queue.push((problem.getStartState(), []))
 
-    frontier = Queue()
-    frontier.push( (currState, currPath) )     # Insert just the start state, in order to pop it first
-    explored = set()
-    while not frontier.isEmpty():
-        currState, currPath = frontier.pop()    # Popping a state and the corresponding path
-        # To pass autograder.py question2:
-        if problem.isGoalState(currState):
-            return currPath
-        explored.add(currState)
-        frontierStates = [ t[0] for t in frontier.list ]
-        for s in problem.getSuccessors(currState):
-            if s[0] not in explored and s[0] not in frontierStates:
-                # Lecture code:
-                # if problem.isGoalState(s[0]):
-                #     return currPath + [s[1]]
-                frontier.push( (s[0], currPath + [s[1]]) )      # Adding the successor and its path to the frontier
+    start_time = time.perf_counter()
 
-    return []       # If this point is reached, a solution could not be found.
+    while not queue.isEmpty():
+        current_state, path = queue.pop()
+
+        if current_state in visited:
+            continue
+        visited.add(current_state)
+
+        if problem.isGoalState(current_state):
+            execution_time = time.perf_counter() - start_time
+            path_cost = problem.getCostOfActions(path)
+            print(f"BFS Execution Time: {execution_time:.6f} seconds")
+            print(f"BFS Total Path Length: {len(path)}")
+            print(f"BFS Total Path Cost: {path_cost}")
+            return path
+
+        for successor, action, step_cost in problem.getSuccessors(current_state):
+            if successor not in visited:
+                queue.push((successor, path + [action]))
+
+    execution_time = time.perf_counter() - start_time
+    print(f"BFS Execution Time: {execution_time:.6f} seconds")
+    return []
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
