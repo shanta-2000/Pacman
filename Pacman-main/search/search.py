@@ -73,12 +73,11 @@ def tinyMazeSearch(problem):
     return  [s, s, w, s, w, w, s, w]
 
 def depthFirstSearch(problem):
-    from util import Stack
     stack = Stack()
     visited = set()
     stack.push((problem.getStartState(), []))
 
-    start_time = time.time()
+    start_time = time.perf_counter()
 
     while not stack.isEmpty():
         current_state, path = stack.pop()
@@ -88,9 +87,9 @@ def depthFirstSearch(problem):
         visited.add(current_state)
 
         if problem.isGoalState(current_state):
-            execution_time = time.time() - start_time
+            execution_time = time.perf_counter() - start_time
             path_cost = problem.getCostOfActions(path)
-            print(f"DFS Execution Time: {execution_time:.4f} seconds")
+            print(f"DFS Execution Time: {execution_time:.6f} seconds")
             print(f"DFS Total Path Length: {len(path)}")
             print(f"DFS Total Path Cost: {path_cost}")
             return path
@@ -99,8 +98,8 @@ def depthFirstSearch(problem):
             if successor not in visited:
                 stack.push((successor, path + [action]))
 
-    execution_time = time.time() - start_time
-    print(f"DFS Execution Time: {execution_time:.4f} seconds")
+    execution_time = time.perf_counter() - start_time
+    print(f"DFS Execution Time: {execution_time:.6f} seconds")
     return []
 
 def breadthFirstSearch(problem):
